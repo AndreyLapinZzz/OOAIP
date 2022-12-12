@@ -14,7 +14,7 @@ jobs:
         with:
           dotnet-version: 6.x
       - name: Install dependencies
-        run: dotnet restore ./SpaceBattle
+        run: dotnet restore
       - name: Build
         run: dotnet build ./SpaceBattle.Lib --configuration Release --no-restore
       - name: Test
