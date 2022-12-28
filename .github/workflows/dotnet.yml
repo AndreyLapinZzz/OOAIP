@@ -1,6 +1,9 @@
 name: .NET
 
-on: [push]
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -14,10 +17,12 @@ jobs:
         with:
           dotnet-version: 6.x
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore ./SpaceBattle.Lib
       - name: Build
         run: dotnet build ./SpaceBattle.Lib --configuration Release --no-restore
       - name: Test
-        run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=../coverage/ -p:CoverletOutputFormat=opencover --no-build --verbosity d ./SpaceBattle.Lib.Test
+        run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=coverage/ -p:CoverletOutputFormat=opencover
       - name: Codecov
         uses: codecov/codecov-action@v3
+        with: 
+          files: SpaceBattle.Lib.Test/coverage/coverage.opencover.xml

@@ -70,7 +70,8 @@ public class VectorTests {
     }
 
     [Fact]
-    public void VectorHashCodeEqual(){
+    public void VectorHashCodeEqual()
+    {
         Vector a = new Vector(0,1,1,0);
         Vector b = new Vector(0,1,1,0);
         Assert.True(a.GetHashCode() == b.GetHashCode());

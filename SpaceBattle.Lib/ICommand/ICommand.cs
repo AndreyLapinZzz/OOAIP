@@ -1,6 +1,7 @@
 namespace SpaceBattle.Lib;
 
-public interface ICommand{
+public interface ICommand
+{
 
     void execute();
 
