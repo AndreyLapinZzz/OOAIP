@@ -13,8 +13,8 @@ public class StartCommand : ICommand
     public void execute()
     {
         obj.properties.ToList().ForEach(o => IoC.Resolve<ICommand>("Game.SetProperty", obj.uobject, o.Key, o.Value).execute());
-        ICommand moveCommand = IoC.Resolve<ICommand>("Command.Move", obj.uobject);
-        IoC.Resolve<ICommand>("Game.SetProperty", obj.uobject, "Commands.Movement", moveCommand).execute();
-        IoC.Resolve<ICommand>("Queue.Push", moveCommand).execute();
+        ICommand moveCmd = IoC.Resolve<ICommand>("Game.Commands.Move", obj.uobject);
+        IoC.Resolve<ICommand>("Game.SetProperty", obj.uobject, "Move", moveCmd).execute();
+        IoC.Resolve<ICommand>("Queue.Push", moveCmd).execute();
     }
 }
