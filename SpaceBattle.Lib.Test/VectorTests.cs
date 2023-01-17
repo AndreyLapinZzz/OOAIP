@@ -75,4 +75,22 @@ public class VectorTests {
         Vector b = new Vector(0,1,1,0);
         Assert.True(a.GetHashCode() == b.GetHashCode());
     }
+
+    [Fact]
+    public void PositiveOperationDifferenceVectorTest()
+    {
+        var a = new Vector(1, 2);
+        var b = new Vector(4, 5);
+
+        Assert.Equal(new Vector(-3, -3), a - b);
+    }
+
+    [Fact]
+    public void NegativeOperationDifferenceVectorTest()
+    {
+        var a = new Vector(1, 2);
+        var b = new Vector(4, 5, 3);
+
+        Assert.Throws<ArgumentException>(() => a - b);
+    }
 }
