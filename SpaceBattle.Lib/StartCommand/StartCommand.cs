@@ -2,10 +2,10 @@ using Hwdtech;
 
 namespace SpaceBattle.Lib;
 
-public class StartMoveCommand : ICommand
+public class StartCommand : ICommand
 {
-    private IMoveCommandStartable obj;
-    public StartMoveCommand(IMoveCommandStartable obj)
+    private IStartable obj;
+    public StartCommand(IStartable obj)
     {
         this.obj = obj;
     }
