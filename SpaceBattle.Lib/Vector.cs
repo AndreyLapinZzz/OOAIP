@@ -27,6 +27,14 @@ public class Vector
 
         return new Vector(array);
     }
+    public static Vector operator -(Vector a, Vector b)
+    {
+        if (a.Size != b.Size) throw new ArgumentException();
+        int[] array = new int[a.Size];
+        for (int i = 0; i < a.Size; i++) array[i] = a[i] - b[i];
+
+        return new Vector(array);
+    }
     public static bool operator ==(Vector a, Vector b)
     {
         if (a.Size != b.Size) return false;
