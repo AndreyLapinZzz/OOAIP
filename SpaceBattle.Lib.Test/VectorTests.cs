@@ -30,6 +30,14 @@ public class VectorTests {
     }
 
     [Fact]
+    public void MinError()
+    {
+        Vector v1 = new Vector(1, 0,0);
+        Vector v2 = new Vector(1, 1);
+        Assert.Throws<ArgumentException>(() => v1 - v2);
+    }
+
+    [Fact]
     public void SumPositive()
     {
         Vector a = new Vector(1,0,3,0);
