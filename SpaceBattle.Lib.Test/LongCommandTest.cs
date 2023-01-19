@@ -12,8 +12,10 @@ public class LongCommandTest
     [Fact]
     public void LongCommandStrategyTest(){
         var mockComf = new Mock<ICommand>();
-        
-        RepeatCommand repCom = new RepeatCommand(mockComf.Object);
+
+        List<ICommand> cList = new List<ICommand>();
+        cList.Add(mockComf.Object);
+        RepeatCommand repCom = new RepeatCommand(cList);
         repCom.execute();
 
         var mockQueuePushStrategy = new Mock<IStrategy>();
