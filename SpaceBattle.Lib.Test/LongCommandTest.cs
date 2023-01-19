@@ -11,19 +11,21 @@ public class LongCommandTest
     }
     [Fact]
     public void LongCommandStrategyTest(){
-        var mockCom = new Mock<ICommand>();
-        mockCom.Setup(x => x.execute());
+        var mockComf = new Mock<ICommand>();
+        
+        RepeatCommand repCom = new RepeatCommand(mockComf.Object);
+        repCom.execute();
 
         var mockQueuePushStrategy = new Mock<IStrategy>();
-        mockQueuePushStrategy.Setup(x => x.RunStrategy(It.IsAny<object[]>())).Returns(mockCom.Object).Verifiable();
+        mockQueuePushStrategy.Setup(x => x.RunStrategy(It.IsAny<object[]>())).Returns(repCom).Verifiable();
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.QueuePushBack", (object[] args) => mockQueuePushStrategy.Object.RunStrategy(args)).Execute();
 
         var mockMComStrategy = new Mock<IStrategy>();
-        mockMComStrategy.Setup(x => x.RunStrategy(It.IsAny<object[]>())).Returns(mockCom.Object).Verifiable();
+        mockMComStrategy.Setup(x => x.RunStrategy(It.IsAny<object[]>())).Returns(repCom).Verifiable();
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.CreateMacroCommand", (object[] args) => mockMComStrategy.Object.RunStrategy(args)).Execute();
     
         var mockRepStrategy = new Mock<IStrategy>();
-        mockRepStrategy.Setup(x => x.RunStrategy(It.IsAny<object[]>())).Returns(mockCom.Object).Verifiable();
+        mockRepStrategy.Setup(x => x.RunStrategy(It.IsAny<object[]>())).Returns(repCom).Verifiable();
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.CommandRepeat", (object[] args) => mockRepStrategy.Object.RunStrategy(args)).Execute();
         
         var LongCommand = new LongCommandStrategy();
