@@ -14,39 +14,39 @@ public class MyThread
     Action? strategy;
 
     bool stop = false;
-    public void Stop()
+    public void HardStop()
     {
-        stop = true;
+        IoC.Resolve<ICommand>("Game.HardStopTheThread", thread);
+        // queue.Receive();
+        // stop = true;
     }
 
     public void SoftStop()
     {
-        //queue.Receive();
-        // ждём пока какие-то команды выполнятся
-        // thread.Abort()
-    }
+        IoC.Resolve<ICommand>("Game.SoftStopTheThread", thread);
+        // while (true)
+        // {
+        //     HandleCommand();
+        // }
 
-    public void HardStop()
-    {
-        thread.Abort();
+        // this.HardStop();
+        // // queue.Receive();
+        // // ждём пока какие-то команды выполнятся
+        // // stop = true;
+        
     }
-
-    static void DoSomeWork(CancellationToken ct)
-    {
-        // Was cancellation already requested?
-        if (ct.IsCancellationRequested)
-        {
-            Console.WriteLine("Task was cancelled before it got started.");
-            ct.ThrowIfCancellationRequested();
-        }
-    }
-
 
     internal void HandleCommand()
     {
         var cmd = queue.Receive();
-
+        try
+        {
         cmd.execute();
+        }
+        catch
+        {
+            IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
+        }
     }
     public MyThread(IReceiver receiver)
     {
@@ -110,21 +110,21 @@ public class UpdateBehaviourCommand : ICommand
 //     }
 // }
 
-// class ReceiveAdapter : IReceiver
-// {
-//     BlockingCollection<ICommand> queue;
-//     public ReceiveAdapter(BlockingCollection<ICommand> queue) => this.queue = queue;
+public class ReceiveAdapter : IReceiver
+{
+    BlockingCollection<ICommand> queue;
+    public ReceiveAdapter(BlockingCollection<ICommand> queue) => this.queue = queue;
 
-//     public ICommand Receive()
-//     {
-//         return queue.Take();
-//     }
+    public ICommand Receive()
+    {
+        return queue.Take();
+    }
 
-//     public bool isEmpty()
-//     {
-//         return queue.IsEmpty();
-//     }
-// }
+    public bool isEmpty()
+    {
+        return queue.LongCount() == 0;
+    }
+}
 
 // class GameCommand : ICommand
 // {
