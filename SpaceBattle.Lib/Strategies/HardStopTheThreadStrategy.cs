@@ -1,6 +1,6 @@
 namespace SpaceBattle.Lib;
 
-public class HardStopTheThread : IStrategy
+public class HardStopTheThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {

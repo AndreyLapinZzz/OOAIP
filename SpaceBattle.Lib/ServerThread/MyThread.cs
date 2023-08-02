@@ -5,35 +5,20 @@ namespace SpaceBattle.Lib;
 public interface IReceiver
 {
     ICommand Receive();
+    bool isEmpty();
 }
 
 public class MyThread
 {
+    int threadId;
     Thread thread;
     IReceiver queue;
     Action? strategy;
-
     bool stop = false;
-    public void HardStop()
-    {
-        IoC.Resolve<ICommand>("Game.HardStopTheThread", thread);
-        // queue.Receive();
-        // stop = true;
-    }
 
-    public void SoftStop()
+    internal void Stop()
     {
-        IoC.Resolve<ICommand>("Game.SoftStopTheThread", thread);
-        // while (true)
-        // {
-        //     HandleCommand();
-        // }
-
-        // this.HardStop();
-        // // queue.Receive();
-        // // ждём пока какие-то команды выполнятся
-        // // stop = true;
-        
+        stop = true;
     }
 
     internal void HandleCommand()
@@ -48,8 +33,9 @@ public class MyThread
             IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
         }
     }
-    public MyThread(IReceiver receiver)
+    public MyThread(int threadId, IReceiver receiver)
     {
+        this.threadId = threadId;
         this.queue = receiver;
         Action strategy = () =>
         {
@@ -92,24 +78,57 @@ public class UpdateBehaviourCommand : ICommand
     }
 }
 
+public class SendCommand : ICommand
+{
+    int threadId;
+    ICommand cmd;
 
-// class ThreadStopCommand : ICommand
-// {
-//     MyThread stoppingThread;
-//     public ThreadStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
-//     public void execute()
-//     {
-//         if (Thread.CurrentThread == stoppingThread)
-//         {
-//             stoppingThread.Stop();
-//         }
-//         else
-//         {
-//             throw new Exception();
-//         }
-//     }
-// }
+    public SendCommand(int threadId, ICommand cmd)
+    {
+        this.threadId = threadId;
+        this.cmd = cmd;
+    }
 
+    public void execute()
+    {
+        IoC.Resolve<ICommand>("Game.SendCommand", threadId, cmd);
+    }
+}
+
+public class HardStopCommand : ICommand
+{
+    MyThread stoppingThread;
+    public HardStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
+    public void execute()
+    {
+        if (Equals(stoppingThread, Thread.CurrentThread))
+        {
+            //stoppingThread.Stop();
+            IoC.Resolve<ICommand>("Game.HardStopTheThread", stoppingThread);
+        }
+        else
+        {
+            throw new Exception();
+        }
+    }
+}
+
+public class SoftStopCommand : ICommand
+{
+    MyThread stoppingThread;
+    public SoftStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
+    public void execute()
+    {
+        if (Equals(stoppingThread, Thread.CurrentThread))
+        {
+            IoC.Resolve<ICommand>("Game.SendCommand", stoppingThread, IoC.Resolve<ICommand>("Game.HardStopTheThread", stoppingThread)); // отправляем в очередь HardStop
+        }
+        else
+        {
+            throw new Exception();
+        }
+    }
+}
 public class ReceiveAdapter : IReceiver
 {
     BlockingCollection<ICommand> queue;
@@ -125,6 +144,16 @@ public class ReceiveAdapter : IReceiver
         return queue.LongCount() == 0;
     }
 }
+
+interface ISender
+{
+    void Send(object message);
+}
+
+
+//IoC.Resolve<ICommand>("Command.SendMessage", obj).execute();
+
+
 
 // class GameCommand : ICommand
 // {

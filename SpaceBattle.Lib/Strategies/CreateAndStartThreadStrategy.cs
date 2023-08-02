@@ -4,10 +4,12 @@ public class CreateAndStartThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        string ThreadId = (string)args[0];
+        int threadId = (int)args[0];
 
+        IReceiver reciever = (IReceiver)args[1];
+
+        MyThread thread = new MyThread(threadId, reciever);
         
-
-        throw new NotImplementedException();
+        return thread;
     }
 }
