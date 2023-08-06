@@ -4,9 +4,10 @@ public class HardStopTheThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        string threadId = (string)args[0];
-        var action = args[1];
-
-        return action;
+        MyThread thread = (MyThread) args[0];
+        
+        thread.Stop();
+        
+        return 0;
     }
 }

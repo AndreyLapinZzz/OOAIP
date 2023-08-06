@@ -6,14 +6,14 @@ public interface IReceiver
 {
     ICommand Receive();
     bool isEmpty();
+    void Push(ICommand cmd);
 }
 
 public class MyThread
 {
-    int threadId;
     Thread thread;
     IReceiver queue;
-    Action? strategy;
+    Action strategy;
     bool stop = false;
 
     internal void Stop()
@@ -33,11 +33,10 @@ public class MyThread
             IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
         }
     }
-    public MyThread(int threadId, IReceiver receiver)
+    public MyThread(IReceiver receiver)
     {
-        this.threadId = threadId;
         this.queue = receiver;
-        Action strategy = () =>
+        this.strategy = () =>
         {
             HandleCommand();
         };
@@ -53,11 +52,16 @@ public class MyThread
     }
     internal void UpdateBehaviour(Action newBehaviour)
     {
-        strategy = newBehaviour;
+        this.strategy = newBehaviour;
     }
     public void execute()
     {
         thread.Start();
+        //IoC.Resolve<ICommand>("CreateAndStartThread", thread, strategy);
+    }
+    internal IReceiver GetQueue()
+    {
+        return queue;
     }
 }
 
@@ -80,18 +84,18 @@ public class UpdateBehaviourCommand : ICommand
 
 public class SendCommand : ICommand
 {
-    int threadId;
+    MyThread thread;
     ICommand cmd;
 
-    public SendCommand(int threadId, ICommand cmd)
+    public SendCommand(MyThread thread, ICommand cmd)
     {
-        this.threadId = threadId;
+        this.thread = thread;
         this.cmd = cmd;
     }
 
     public void execute()
     {
-        IoC.Resolve<ICommand>("Game.SendCommand", threadId, cmd);
+        IoC.Resolve<ICommand>("Game.SendCommand", thread, cmd);
     }
 }
 
@@ -121,7 +125,7 @@ public class SoftStopCommand : ICommand
     {
         if (Equals(stoppingThread, Thread.CurrentThread))
         {
-            IoC.Resolve<ICommand>("Game.SendCommand", stoppingThread, IoC.Resolve<ICommand>("Game.HardStopTheThread", stoppingThread)); // отправляем в очередь HardStop
+            IoC.Resolve<ICommand>("Game.SoftStopTheThread", stoppingThread);
         }
         else
         {
@@ -129,6 +133,7 @@ public class SoftStopCommand : ICommand
         }
     }
 }
+
 public class ReceiveAdapter : IReceiver
 {
     BlockingCollection<ICommand> queue;
@@ -142,6 +147,11 @@ public class ReceiveAdapter : IReceiver
     public bool isEmpty()
     {
         return queue.LongCount() == 0;
+    }
+    
+    public void Push(ICommand cmd)
+    {
+        queue.Add(cmd);
     }
 }
 
@@ -175,6 +185,8 @@ interface ISender
 //     }
 // }
 
+// public class WhatTheIntrestingThings {
+
 // BlockingCollection<ICommand> queue = new BlockingCollection<ICommand>(1000);
 
 // ReceiveAdapter receiver = new ReceiveAdapter(queue);
@@ -197,3 +209,4 @@ interface ISender
 //         }
 //     }
 // ));
+// }

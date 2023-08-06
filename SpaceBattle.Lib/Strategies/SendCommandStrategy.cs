@@ -5,10 +5,14 @@ public class SendCommandStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        int threadId = (int)args[0];
+        MyThread thread = (MyThread)args[0];
         
         ICommand cmd = (ICommand)args[1];
 
-        return 0;
+        IReceiver queue = thread.GetQueue(); //??
+
+        queue.Push(cmd);
+
+        return queue;
     }
 }
