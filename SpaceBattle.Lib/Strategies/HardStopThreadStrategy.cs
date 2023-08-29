@@ -1,6 +1,6 @@
 namespace SpaceBattle.Lib;
 
-public class HardStopTheThreadStrategy : IStrategy
+public class HardStopThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
@@ -8,6 +8,6 @@ public class HardStopTheThreadStrategy : IStrategy
         
         thread.Stop();
         
-        return 0;
+        return new MoveCommandCommand();
     }
 }

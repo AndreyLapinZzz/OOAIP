@@ -11,9 +11,9 @@ public interface IReceiver
 
 public class MyThread
 {
-    Thread thread;
-    IReceiver queue;
-    Action strategy;
+    public Thread thread;
+    public IReceiver queue;
+    public Action strategy;
     bool stop = false;
 
     internal void Stop()
@@ -26,11 +26,13 @@ public class MyThread
         var cmd = queue.Receive();
         try
         {
-        cmd.execute();
+            cmd?.execute();
         }
         catch
         {
-            IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
+            //throw new Exception();
+           /// throw new Exception();
+            //IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
         }
     }
     public MyThread(IReceiver receiver)
@@ -59,10 +61,10 @@ public class MyThread
         thread.Start();
         //IoC.Resolve<ICommand>("CreateAndStartThread", thread, strategy);
     }
-    internal IReceiver GetQueue()
-    {
-        return queue;
-    }
+    // internal IReceiver GetQueue()
+    // {
+    //     return queue;
+    // }
 }
 
 public class UpdateBehaviourCommand : ICommand
@@ -95,7 +97,7 @@ public class SendCommand : ICommand
 
     public void execute()
     {
-        IoC.Resolve<ICommand>("Game.SendCommand", thread, cmd);
+        ICommand command = IoC.Resolve<ICommand>("Game.SendCommand", thread, cmd);
     }
 }
 
@@ -105,15 +107,23 @@ public class HardStopCommand : ICommand
     public HardStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
     public void execute()
     {
-        if (Equals(stoppingThread, Thread.CurrentThread))
-        {
+        // if (Equals(stoppingThread, Thread.CurrentThread))
+        // {
             //stoppingThread.Stop();
-            IoC.Resolve<ICommand>("Game.HardStopTheThread", stoppingThread);
+        try
+        {
+        //IoC.Resolve<ICommand>("Game.HardStopThreadStrategy", new Object[] {stoppingThread});
+        ICommand cmd = IoC.Resolve<ICommand>("Game.HardStopThreadStrategy", stoppingThread);
         }
-        else
+        catch
         {
             throw new Exception();
         }
+        // }
+        // else
+        // {
+        //     throw new Exception();
+        // }
     }
 }
 

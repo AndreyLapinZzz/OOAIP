@@ -1,7 +1,7 @@
 namespace SpaceBattle.Lib;
 using Hwdtech;
 
-public class SoftStopTheThreadStrategy : IStrategy
+public class SoftStopThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
