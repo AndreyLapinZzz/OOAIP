@@ -14,7 +14,7 @@ public class MyThread
     public Thread thread;
     public IReceiver queue;
     public Action strategy;
-    bool stop = false;
+    public bool stop = false;
 
     internal void Stop()
     {
@@ -30,9 +30,9 @@ public class MyThread
         }
         catch
         {
-            //throw new Exception();
-           /// throw new Exception();
-            //IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
+            // throw new Exception();
+            // throw new Exception();
+            // IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
         }
     }
     public MyThread(IReceiver receiver)
@@ -84,6 +84,16 @@ public class UpdateBehaviourCommand : ICommand
     }
 }
 
+public class CreateAndStartThreadCommand : ICommand
+{
+    MyThread thread;
+    public CreateAndStartThreadCommand(MyThread thread) => this.thread = thread;
+    public void execute()
+    {
+        thread.execute();
+    }
+}
+
 public class SendCommand : ICommand
 {
     MyThread thread;
@@ -97,7 +107,8 @@ public class SendCommand : ICommand
 
     public void execute()
     {
-        ICommand command = IoC.Resolve<ICommand>("Game.SendCommand", thread, cmd);
+        //ICommand command = IoC.Resolve<ICommand>("Game.SendCommand", thread, cmd);
+        thread.queue.Push(cmd);
     }
 }
 
@@ -107,25 +118,25 @@ public class HardStopCommand : ICommand
     public HardStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
     public void execute()
     {
-        // if (Equals(stoppingThread, Thread.CurrentThread))
+        // if (Equals(stoppingThread.thread, Thread.CurrentThread))
         // {
-            //stoppingThread.Stop();
-        try
-        {
-        //IoC.Resolve<ICommand>("Game.HardStopThreadStrategy", new Object[] {stoppingThread});
-        ICommand cmd = IoC.Resolve<ICommand>("Game.HardStopThreadStrategy", stoppingThread);
-        }
-        catch
-        {
-            throw new Exception();
-        }
+        //     stoppingThread.Stop();
         // }
         // else
         // {
         //     throw new Exception();
         // }
+        try
+        {
+            stoppingThread.Stop();
+        }
+        catch
+        {
+            throw new Exception();
+        }
     }
 }
+
 
 public class SoftStopCommand : ICommand
 {
@@ -133,14 +144,21 @@ public class SoftStopCommand : ICommand
     public SoftStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
     public void execute()
     {
-        if (Equals(stoppingThread, Thread.CurrentThread))
+        // if (Equals(stoppingThread, Thread.CurrentThread))
+        // {
+        try
         {
-            IoC.Resolve<ICommand>("Game.SoftStopTheThread", stoppingThread);
+            //IoC.Resolve<ICommand>("Game.SoftStopTheThread", stoppingThread);
+            IoC.Resolve<ICommand>("Game.SendCommand", stoppingThread, IoC.Resolve<ICommand>("Game.HardStopThreadStrategy", stoppingThread)).execute();
         }
-        else
+        catch
         {
             throw new Exception();
         }
+        // else
+        // {
+        //     throw new Exception();
+        // }
     }
 }
 
@@ -194,6 +212,7 @@ interface ISender
 //         }
 //     }
 // }
+
 
 // public class WhatTheIntrestingThings {
 

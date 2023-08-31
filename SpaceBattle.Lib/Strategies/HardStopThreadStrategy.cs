@@ -4,10 +4,12 @@ public class HardStopThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        MyThread thread = (MyThread) args[0];
+        MyThread stoppingThread = (MyThread) args[0];
         
-        thread.Stop();
-        
-        return new MoveCommandCommand();
+        //thread.Stop();
+        ICommand hardStopCommand = new HardStopCommand(stoppingThread);
+
+        return hardStopCommand;
+        //return new Command();
     }
 }

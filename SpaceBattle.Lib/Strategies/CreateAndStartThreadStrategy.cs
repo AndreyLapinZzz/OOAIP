@@ -4,10 +4,10 @@ public class CreateAndStartThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        IReceiver reciever = (IReceiver)args[0];
+        MyThread thread = (MyThread)args[0];
 
-        MyThread thread = new MyThread(reciever);
+        ICommand createAndStartThread = new CreateAndStartThreadCommand(thread);
         
-        return thread;
+        return createAndStartThread;
     }
 }

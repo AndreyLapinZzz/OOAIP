@@ -6,15 +6,16 @@ public class SendCommandStrategy : IStrategy
     public object RunStrategy(params object[] args)
     {
         MyThread thread = (MyThread)args[0];
-        
         ICommand cmd = (ICommand)args[1];
 
-        IReceiver queue = thread.queue;
+        ICommand sendCommand = new SendCommand(thread, cmd);
 
-        //IReceiver queue = thread.GetQueue(); //??
+        // IReceiver queue = thread.queue;
 
-        queue.Push(cmd);
+        // //IReceiver queue = thread.GetQueue(); //??
 
-        return cmd;
+        // queue.Push(cmd);
+
+        return sendCommand;
     }
 }
