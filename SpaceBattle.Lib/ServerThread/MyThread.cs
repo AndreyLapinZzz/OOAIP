@@ -31,8 +31,7 @@ public class MyThread
         catch
         {
             // throw new Exception();
-            // throw new Exception();
-            // IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd);
+            IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd.GetType());
         }
     }
     public MyThread(IReceiver receiver)
@@ -118,7 +117,7 @@ public class HardStopCommand : ICommand
     public HardStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
     public void execute()
     {
-        // if (Equals(stoppingThread.thread, Thread.CurrentThread))
+        // if (stoppingThread.thread == Thread.CurrentThread)
         // {
         //     stoppingThread.Stop();
         // }

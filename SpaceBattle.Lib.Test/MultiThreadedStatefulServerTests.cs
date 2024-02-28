@@ -10,7 +10,7 @@ namespace SpaceBattle.Lib.Test;
 public class MultiThreadedStategulServerTests
 {
     //public Mock<IStrategy> HardStopThreadStrategy = new Mock<IStrategy>();
-    //Mock<IStrategy> HardStopThreadStrategy = new Mock<IStrategy>();
+    Mock<IStrategy> exceptionHandlerStrategy = new Mock<IStrategy>();
     public MultiThreadedStategulServerTests()
     {
 
@@ -28,6 +28,7 @@ public class MultiThreadedStategulServerTests
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.HardStopThreadStrategy", (object[] args) => hardStopThreadStrategy.RunStrategy(args)).Execute();
         var softStopThreadStrategy = new HardStopThreadStrategy();
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.SoftStopThreadStrategy", (object[] args) => softStopThreadStrategy.RunStrategy(args)).Execute();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandlerStrategy.Object.RunStrategy(args)).Execute();
     }
 
 
@@ -92,14 +93,14 @@ public class MultiThreadedStategulServerTests
     [Fact]
     public void UpdateBehaviourCheck()
     {
-        Action donothing = () => {};
+        Action doNothing = () => {};
         var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
         var thread = new Mock<MyThread>(receiver.Object);
-        var ubc = new Mock<UpdateBehaviourCommand>(thread.Object, donothing);
+        var ubc = new Mock<UpdateBehaviourCommand>(thread.Object, doNothing);
 
         ubc.Object.execute();
 
-        Assert.Equal(thread.Object.strategy, donothing);
+        Assert.Equal(thread.Object.strategy, doNothing);
     }
 
     // [Fact]
@@ -139,6 +140,15 @@ public class MultiThreadedStategulServerTests
         var thread = new Mock<MyThread>(receiver.Object);
         Assert.Equal(thread.Object.queue, receiver.Object);
 
+        CancellationTokenSource tokenSource = new();
+        thread.Object.thread = new(
+            () => LongRunningOperation(tokenSource.Token) // Pass the token to the thread you want to stop.
+        );
+
+        var CreateAndStartThreadStrategy = new CreateAndStartThreadStrategy();
+        ICommand cast = IoC.Resolve<ICommand>("Game.CreateAndStartThread", thread.Object);
+        cast.execute();
+
         var softStopThreadStrategy = new SoftStopThreadStrategy();
         ICommand ss = (ICommand)softStopThreadStrategy.RunStrategy(thread.Object);
         ss.execute();
@@ -147,6 +157,12 @@ public class MultiThreadedStategulServerTests
         hs.execute();
 
         Assert.True(thread.Object.stop);
+        
+        Thread.Sleep(1500);
+        tokenSource.Cancel(); // Request cancellation. 
+        thread.Object.thread.Join(); // If you want to wait for cancellation, `Join` blocks the calling thread until the thread represented by this instance terminates.
+        tokenSource.Dispose(); // Dispose the token source.
+        Thread.Sleep(1500);
     }
 
     [Fact]
@@ -156,9 +172,14 @@ public class MultiThreadedStategulServerTests
         var thread = new Mock<MyThread>(receiver.Object);
         var cmd = new Mock<ICommand>();
 
+        thread.Object.queue.Push(cmd.Object);
+        thread.Object.strategy();
+
         cmd.Setup(x => x.execute()).Throws<Exception>().Verifiable();
         thread.Object.queue.Push(cmd.Object);
-        Assert.Throws<Exception>(() => thread.Object.strategy());
+        //Assert.Throws<Exception>(() => thread.Object.strategy());
+        thread.Object.strategy();
+        exceptionHandlerStrategy.Verify();
     }
 
     [Fact]
