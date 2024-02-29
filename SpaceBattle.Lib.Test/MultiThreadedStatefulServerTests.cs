@@ -3,6 +3,7 @@ using Hwdtech;
 using Hwdtech.Ioc;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Reflection.Metadata;
 
 namespace SpaceBattle.Lib.Test;
 
@@ -10,6 +11,7 @@ namespace SpaceBattle.Lib.Test;
 public class MultiThreadedStategulServerTests
 {
     Mock<IStrategy> exceptionHandlerStrategy = new Mock<IStrategy>();
+    AutoResetEvent autoEvent = new AutoResetEvent(false);
     public MultiThreadedStategulServerTests()
     {
 
@@ -30,11 +32,10 @@ public class MultiThreadedStategulServerTests
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandlerStrategy.Object.RunStrategy(args)).Execute();
     }
 
-
     public void LongRunningOperation(CancellationToken token)
     {
         while(!token.IsCancellationRequested) {
-            Thread.Sleep(500);
+            autoEvent.WaitOne(500);
         }
     }
 
@@ -107,11 +108,11 @@ public class MultiThreadedStategulServerTests
 
         Assert.True(thread.Object.stop);
         
-        Thread.Sleep(1500);
+        autoEvent.WaitOne(1500);
         tokenSource.Cancel();
         thread.Object.thread.Join();
         tokenSource.Dispose();
-        Thread.Sleep(1500);
+        autoEvent.WaitOne(1500);
 
         Assert.True(receiver.Object.isEmpty());
     }
@@ -146,10 +147,10 @@ public class MultiThreadedStategulServerTests
         ICommand cast = IoC.Resolve<ICommand>("Game.CreateAndStartThread", thread.Object);
         cast.execute();
 
-        Thread.Sleep(1500);
         tokenSource.Cancel();
         thread.Object.thread.Join();
         tokenSource.Dispose();
-        Thread.Sleep(1500);
+
+        autoEvent.WaitOne(1500);
     }
 }
