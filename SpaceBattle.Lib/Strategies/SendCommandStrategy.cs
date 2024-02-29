@@ -10,12 +10,6 @@ public class SendCommandStrategy : IStrategy
 
         ICommand sendCommand = new SendCommand(thread, cmd);
 
-        // IReceiver queue = thread.queue;
-
-        // //IReceiver queue = thread.GetQueue(); //??
-
-        // queue.Push(cmd);
-
         return sendCommand;
     }
 }
