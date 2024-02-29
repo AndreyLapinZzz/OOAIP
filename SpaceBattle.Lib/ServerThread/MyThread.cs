@@ -2,12 +2,6 @@ using Hwdtech;
 using System.Collections.Concurrent;
 
 namespace SpaceBattle.Lib;
-public interface IReceiver
-{
-    ICommand Receive();
-    bool isEmpty();
-    void Push(ICommand cmd);
-}
 
 public class MyThread
 {
@@ -30,7 +24,6 @@ public class MyThread
         }
         catch
         {
-            // throw new Exception();
             IoC.Resolve<ICommand>("Game.ExceptionHandler", new Exception(), cmd.GetType());
         }
     }
