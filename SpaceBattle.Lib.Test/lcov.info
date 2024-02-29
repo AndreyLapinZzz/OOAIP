@@ -1,4 +1,4 @@
-SF:C:\OOAiP\SpaceBattle.Lib\CheckCollision.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\CheckCollision.cs
 FN:11,System.Void SpaceBattle.Lib.CheckCollision::execute()
 FNDA:2,System.Void SpaceBattle.Lib.CheckCollision::execute()
 DA:12,2
@@ -21,7 +21,7 @@ BRH:2
 FNF:2
 FNH:2
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\MarcoCommand\BuildMacroCommandStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\MarcoCommand\BuildMacroCommandStrategy.cs
 FN:7,System.Object SpaceBattle.Lib.BuildMacroCommandStrategy::RunStrategy(System.Object[])
 FNDA:1,System.Object SpaceBattle.Lib.BuildMacroCommandStrategy::RunStrategy(System.Object[])
 DA:8,1
@@ -44,7 +44,7 @@ BRH:2
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\MarcoCommand\MacroCommand.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\MarcoCommand\MacroCommand.cs
 FN:11,System.Void SpaceBattle.Lib.MacroCommand::execute()
 FNDA:1,System.Void SpaceBattle.Lib.MacroCommand::execute()
 DA:12,1
@@ -68,7 +68,7 @@ BRH:2
 FNF:2
 FNH:2
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Move\MoveCommand.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Move\MoveCommand.cs
 FN:8,System.Void SpaceBattle.Lib.MoveCommand::execute()
 FNDA:4,System.Void SpaceBattle.Lib.MoveCommand::execute()
 DA:9,4
@@ -82,7 +82,7 @@ BRH:0
 FNF:2
 FNH:2
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Rotate\RotateCommand.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Rotate\RotateCommand.cs
 FN:8,System.Void SpaceBattle.Lib.RotateCommand::execute()
 FNDA:6,System.Void SpaceBattle.Lib.RotateCommand::execute()
 DA:9,6
@@ -98,7 +98,7 @@ BRH:0
 FNF:2
 FNH:2
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Rotate\Ugle.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Rotate\Ugle.cs
 FN:28,SpaceBattle.Lib.Ugle SpaceBattle.Lib.Ugle::op_Addition(SpaceBattle.Lib.Ugle,SpaceBattle.Lib.Ugle)
 FNDA:4,SpaceBattle.Lib.Ugle SpaceBattle.Lib.Ugle::op_Addition(SpaceBattle.Lib.Ugle,SpaceBattle.Lib.Ugle)
 DA:29,4
@@ -188,12 +188,44 @@ BRH:28
 FNF:5
 FNH:5
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\ServerThread\MyThread.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\CreateAndStartThreadCommand.cs
+FN:10,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::execute()
+FNDA:2,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::execute()
+DA:11,2
+DA:12,2
+DA:13,2
+FN:8,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::.ctor(SpaceBattle.Lib.MyThread)
+FNDA:4,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::.ctor(SpaceBattle.Lib.MyThread)
+DA:9,4
+LF:4
+LH:4
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\HardStopCommad.cs
+FN:10,System.Void SpaceBattle.Lib.HardStopCommand::execute()
+FNDA:2,System.Void SpaceBattle.Lib.HardStopCommand::execute()
+DA:11,2
+DA:13,2
+DA:14,2
+FN:8,System.Void SpaceBattle.Lib.HardStopCommand::.ctor(SpaceBattle.Lib.MyThread)
+FNDA:4,System.Void SpaceBattle.Lib.HardStopCommand::.ctor(SpaceBattle.Lib.MyThread)
+DA:9,4
+LF:4
+LH:4
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\MyThread.cs
 FN:19,System.Void SpaceBattle.Lib.MyThread::Stop()
-FNDA:1,System.Void SpaceBattle.Lib.MyThread::Stop()
-DA:20,1
-DA:21,1
-DA:22,1
+FNDA:2,System.Void SpaceBattle.Lib.MyThread::Stop()
+DA:20,2
+DA:21,2
+DA:22,2
 FN:24,System.Void SpaceBattle.Lib.MyThread::HandleCommand()
 FNDA:2,System.Void SpaceBattle.Lib.MyThread::HandleCommand()
 DA:25,2
@@ -217,12 +249,12 @@ FN:58,System.Void SpaceBattle.Lib.MyThread::execute()
 FNDA:2,System.Void SpaceBattle.Lib.MyThread::execute()
 DA:59,2
 DA:60,2
-DA:62,2
+DA:61,2
 FN:40,System.Void SpaceBattle.Lib.MyThread::<.ctor>b__6_0()
 FNDA:2,System.Void SpaceBattle.Lib.MyThread::<.ctor>b__6_0()
 DA:41,2
 DA:42,2
-DA:43,6
+DA:43,7
 FN:45,System.Void SpaceBattle.Lib.MyThread::<.ctor>b__6_1()
 FNDA:0,System.Void SpaceBattle.Lib.MyThread::<.ctor>b__6_1()
 DA:46,0
@@ -230,103 +262,109 @@ DA:47,0
 DA:48,0
 DA:49,0
 DA:50,0
-DA:51,4
+DA:51,5
 BRDA:47,28,1,0
 BRDA:47,28,0,0
 FN:16,System.Void SpaceBattle.Lib.MyThread::.ctor(SpaceBattle.Lib.IReceiver)
-FNDA:4,System.Void SpaceBattle.Lib.MyThread::.ctor(SpaceBattle.Lib.IReceiver)
-DA:17,4
-DA:37,4
-DA:38,4
-DA:39,4
-DA:40,4
-DA:45,4
-DA:52,4
-DA:53,4
-FN:80,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::execute()
-FNDA:1,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::execute()
-DA:81,1
-DA:82,1
-DA:83,1
-FN:73,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::.ctor(SpaceBattle.Lib.MyThread,System.Action)
-FNDA:1,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::.ctor(SpaceBattle.Lib.MyThread,System.Action)
-DA:74,1
-DA:75,1
-DA:76,1
-DA:77,1
-DA:78,1
-FN:90,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::execute()
-FNDA:2,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::execute()
-DA:91,2
-DA:92,2
-DA:93,2
-FN:88,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::.ctor(SpaceBattle.Lib.MyThread)
-FNDA:4,System.Void SpaceBattle.Lib.CreateAndStartThreadCommand::.ctor(SpaceBattle.Lib.MyThread)
-DA:89,4
-FN:107,System.Void SpaceBattle.Lib.SendCommand::execute()
-FNDA:1,System.Void SpaceBattle.Lib.SendCommand::execute()
-DA:108,1
-DA:110,1
-DA:111,1
-FN:100,System.Void SpaceBattle.Lib.SendCommand::.ctor(SpaceBattle.Lib.MyThread,SpaceBattle.Lib.ICommand)
-FNDA:1,System.Void SpaceBattle.Lib.SendCommand::.ctor(SpaceBattle.Lib.MyThread,SpaceBattle.Lib.ICommand)
-DA:101,1
-DA:102,1
-DA:103,1
-DA:104,1
-DA:105,1
-FN:118,System.Void SpaceBattle.Lib.HardStopCommand::execute()
-FNDA:1,System.Void SpaceBattle.Lib.HardStopCommand::execute()
-DA:119,1
-DA:129,1
-DA:130,1
-DA:131,1
-DA:132,0
-DA:133,0
-DA:134,0
-DA:136,1
-FN:116,System.Void SpaceBattle.Lib.HardStopCommand::.ctor(SpaceBattle.Lib.MyThread)
-FNDA:2,System.Void SpaceBattle.Lib.HardStopCommand::.ctor(SpaceBattle.Lib.MyThread)
-DA:117,2
-FN:144,System.Void SpaceBattle.Lib.SoftStopCommand::execute()
-FNDA:1,System.Void SpaceBattle.Lib.SoftStopCommand::execute()
-DA:145,1
-DA:149,1
-DA:151,1
-DA:152,1
-DA:153,0
-DA:154,0
-DA:155,0
-DA:161,1
-FN:142,System.Void SpaceBattle.Lib.SoftStopCommand::.ctor(SpaceBattle.Lib.MyThread)
-FNDA:2,System.Void SpaceBattle.Lib.SoftStopCommand::.ctor(SpaceBattle.Lib.MyThread)
-DA:143,2
-FN:169,SpaceBattle.Lib.ICommand SpaceBattle.Lib.ReceiveAdapter::Receive()
-FNDA:4,SpaceBattle.Lib.ICommand SpaceBattle.Lib.ReceiveAdapter::Receive()
-DA:170,4
-DA:171,4
-DA:172,4
-FN:174,System.Boolean SpaceBattle.Lib.ReceiveAdapter::isEmpty()
-FNDA:1,System.Boolean SpaceBattle.Lib.ReceiveAdapter::isEmpty()
-DA:175,1
-DA:176,1
-DA:177,1
-FN:179,System.Void SpaceBattle.Lib.ReceiveAdapter::Push(SpaceBattle.Lib.ICommand)
-FNDA:4,System.Void SpaceBattle.Lib.ReceiveAdapter::Push(SpaceBattle.Lib.ICommand)
-DA:180,4
-DA:181,4
-DA:182,4
-FN:166,System.Void SpaceBattle.Lib.ReceiveAdapter::.ctor(System.Collections.Concurrent.BlockingCollection`1<SpaceBattle.Lib.ICommand>)
-FNDA:10,System.Void SpaceBattle.Lib.ReceiveAdapter::.ctor(System.Collections.Concurrent.BlockingCollection`1<SpaceBattle.Lib.ICommand>)
-DA:167,10
-LF:84
-LH:73
+FNDA:5,System.Void SpaceBattle.Lib.MyThread::.ctor(SpaceBattle.Lib.IReceiver)
+DA:17,5
+DA:37,5
+DA:38,5
+DA:39,5
+DA:40,5
+DA:45,5
+DA:52,5
+DA:53,5
+LF:36
+LH:31
 BRF:4
 BRH:2
-FNF:21
-FNH:21
+FNF:7
+FNH:7
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Strategies\CreateAndStartThreadStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\ReceiveAdapter.cs
+FN:10,SpaceBattle.Lib.ICommand SpaceBattle.Lib.ReceiveAdapter::Receive()
+FNDA:4,SpaceBattle.Lib.ICommand SpaceBattle.Lib.ReceiveAdapter::Receive()
+DA:11,4
+DA:12,4
+DA:13,4
+FN:15,System.Boolean SpaceBattle.Lib.ReceiveAdapter::isEmpty()
+FNDA:3,System.Boolean SpaceBattle.Lib.ReceiveAdapter::isEmpty()
+DA:16,3
+DA:17,3
+DA:18,3
+FN:20,System.Void SpaceBattle.Lib.ReceiveAdapter::Push(SpaceBattle.Lib.ICommand)
+FNDA:5,System.Void SpaceBattle.Lib.ReceiveAdapter::Push(SpaceBattle.Lib.ICommand)
+DA:21,5
+DA:22,5
+DA:23,5
+FN:7,System.Void SpaceBattle.Lib.ReceiveAdapter::.ctor(System.Collections.Concurrent.BlockingCollection`1<SpaceBattle.Lib.ICommand>)
+FNDA:12,System.Void SpaceBattle.Lib.ReceiveAdapter::.ctor(System.Collections.Concurrent.BlockingCollection`1<SpaceBattle.Lib.ICommand>)
+DA:8,12
+LF:10
+LH:10
+BRF:0
+BRH:0
+FNF:4
+FNH:4
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\SendCommad.cs
+FN:15,System.Void SpaceBattle.Lib.SendCommand::execute()
+FNDA:1,System.Void SpaceBattle.Lib.SendCommand::execute()
+DA:16,1
+DA:17,1
+DA:18,1
+FN:8,System.Void SpaceBattle.Lib.SendCommand::.ctor(SpaceBattle.Lib.MyThread,SpaceBattle.Lib.ICommand)
+FNDA:1,System.Void SpaceBattle.Lib.SendCommand::.ctor(SpaceBattle.Lib.MyThread,SpaceBattle.Lib.ICommand)
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:13,1
+LF:8
+LH:8
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\SoftStopCommand.cs
+FN:9,System.Void SpaceBattle.Lib.SoftStopCommand::execute()
+FNDA:1,System.Void SpaceBattle.Lib.SoftStopCommand::execute()
+DA:10,1
+DA:11,1
+DA:12,1
+FN:7,System.Void SpaceBattle.Lib.SoftStopCommand::.ctor(SpaceBattle.Lib.MyThread)
+FNDA:2,System.Void SpaceBattle.Lib.SoftStopCommand::.ctor(SpaceBattle.Lib.MyThread)
+DA:8,2
+LF:4
+LH:4
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\ServerThread\UpdateBehaviourCommad.cs
+FN:17,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::execute()
+FNDA:1,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::execute()
+DA:18,1
+DA:19,1
+DA:20,1
+FN:10,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::.ctor(SpaceBattle.Lib.MyThread,System.Action)
+FNDA:1,System.Void SpaceBattle.Lib.UpdateBehaviourCommand::.ctor(SpaceBattle.Lib.MyThread,System.Action)
+DA:11,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:15,1
+LF:8
+LH:8
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\CreateAndStartThreadStrategy.cs
 FN:5,System.Object SpaceBattle.Lib.CreateAndStartThreadStrategy::RunStrategy(System.Object[])
 FNDA:2,System.Object SpaceBattle.Lib.CreateAndStartThreadStrategy::RunStrategy(System.Object[])
 DA:6,2
@@ -341,7 +379,7 @@ BRH:0
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Strategies\GetDifferenceStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\GetDifferenceStrategy.cs
 FN:6,System.Object SpaceBattle.Lib.GetDifferenceStrategy::RunStrategy(System.Object[])
 FNDA:3,System.Object SpaceBattle.Lib.GetDifferenceStrategy::RunStrategy(System.Object[])
 DA:7,3
@@ -362,7 +400,7 @@ BRH:0
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Strategies\GetPropertyStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\GetPropertyStrategy.cs
 FN:3,System.Object SpaceBattle.Lib.GetPropertyStrategy::RunStrategy(System.Object[])
 FNDA:12,System.Object SpaceBattle.Lib.GetPropertyStrategy::RunStrategy(System.Object[])
 DA:4,12
@@ -377,14 +415,14 @@ BRH:0
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Strategies\HardStopThreadStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\HardStopThreadStrategy.cs
 FN:5,System.Object SpaceBattle.Lib.HardStopThreadStrategy::RunStrategy(System.Object[])
-FNDA:1,System.Object SpaceBattle.Lib.HardStopThreadStrategy::RunStrategy(System.Object[])
-DA:6,1
-DA:7,1
-DA:10,1
-DA:12,1
-DA:14,1
+FNDA:2,System.Object SpaceBattle.Lib.HardStopThreadStrategy::RunStrategy(System.Object[])
+DA:6,2
+DA:7,2
+DA:8,2
+DA:10,2
+DA:11,2
 LF:5
 LH:5
 BRF:0
@@ -392,15 +430,15 @@ BRH:0
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Strategies\SendCommandStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\SendCommandStrategy.cs
 FN:6,System.Object SpaceBattle.Lib.SendCommandStrategy::RunStrategy(System.Object[])
 FNDA:1,System.Object SpaceBattle.Lib.SendCommandStrategy::RunStrategy(System.Object[])
 DA:7,1
 DA:8,1
 DA:9,1
 DA:11,1
-DA:19,1
-DA:20,1
+DA:13,1
+DA:14,1
 LF:6
 LH:6
 BRF:0
@@ -408,14 +446,14 @@ BRH:0
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Strategies\SoftStopThreadStrategy.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\SoftStopThreadStrategy.cs
 FN:6,System.Object SpaceBattle.Lib.SoftStopThreadStrategy::RunStrategy(System.Object[])
 FNDA:1,System.Object SpaceBattle.Lib.SoftStopThreadStrategy::RunStrategy(System.Object[])
 DA:7,1
 DA:8,1
-DA:10,1
+DA:9,1
+DA:11,1
 DA:12,1
-DA:17,1
 LF:5
 LH:5
 BRF:0
@@ -423,7 +461,7 @@ BRH:0
 FNF:1
 FNH:1
 end_of_record
-SF:C:\OOAiP\SpaceBattle.Lib\Vector.cs
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Vector.cs
 FN:13,System.Int32 SpaceBattle.Lib.Vector::get_Item(System.Int32)
 FNDA:58,System.Int32 SpaceBattle.Lib.Vector::get_Item(System.Int32)
 DA:14,58

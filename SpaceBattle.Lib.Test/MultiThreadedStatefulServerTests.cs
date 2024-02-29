@@ -9,7 +9,6 @@ namespace SpaceBattle.Lib.Test;
 
 public class MultiThreadedStategulServerTests
 {
-    //public Mock<IStrategy> HardStopThreadStrategy = new Mock<IStrategy>();
     Mock<IStrategy> exceptionHandlerStrategy = new Mock<IStrategy>();
     public MultiThreadedStategulServerTests()
     {
@@ -34,8 +33,7 @@ public class MultiThreadedStategulServerTests
 
     public void LongRunningOperation(CancellationToken token)
     {
-        while(!token.IsCancellationRequested) { // Check if the caller requested cancellation. 
-            //Console.WriteLine("I'm running");
+        while(!token.IsCancellationRequested) {
             Thread.Sleep(500);
         }
     }
@@ -43,8 +41,6 @@ public class MultiThreadedStategulServerTests
     [Fact]
     public void ReceiveAdapterCheck()
     {
-        //ManualResetEvent mre = new ManualResetEvent(false);
-
         var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
         var cmd = new Mock<ICommand>();
 
@@ -54,41 +50,7 @@ public class MultiThreadedStategulServerTests
 
         Assert.True(receiver.Object.isEmpty());
         Assert.Equal(cmd.Object, command);
-
-        //var thread = new Mock<MyThread>(receiver.Object);
-
-        //thread.Object.execute();
-        
-        //receiver.Object.Push(cmd.Object);
-
-        //var a = Thread.CurrentThread.IsAlive;
-
-        //Assert.Throws<Exception>(() => receiver.Object.Receive());
-        
-
     }
-
-    // [Fact]
-    // public void SendCommandCheck()
-    // {
-    //     var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
-    //     var cmd = new Mock<ICommand>();
-    //     var thread = new Mock<MyThread>(receiver.Object);
-
-    //     // var SendCommand = new SendCommand(thread.Object, cmd.Object);
-    //     // SendCommand.execute();
-
-    //     // var command = receiver.Object.Receive();
-
-    //     // Assert.Equal(cmd.Object, command);
-    //     var sendCommandStrategy = new SendCommandStrategy();
-    //     ICommand sendCommand = (ICommand)sendCommandStrategy.RunStrategy(thread.Object, cmd.Object);
-    //     sendCommand.execute();
-
-    //     //IoC.Resolve<ICommand>("Game.SendCommand", thread.Object, cmd.Object);
-    //     var command = receiver.Object.Receive();
-    //     Assert.Equal(cmd.Object, command);
-    // }
 
     [Fact]
     public void UpdateBehaviourCheck()
@@ -103,35 +65,22 @@ public class MultiThreadedStategulServerTests
         Assert.Equal(thread.Object.strategy, doNothing);
     }
 
-    // [Fact]
-    // public void HardStopCheck()
-    // {
-    //     var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
-    //     var thread = new Mock<MyThread>(receiver.Object);
-    //     Assert.Equal(thread.Object.queue, receiver.Object);
+    [Fact]
+    public void HardStopCheck()
+    {
+        var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
+        var thread = new Mock<MyThread>(receiver.Object);
+        var cmd = new Mock<ICommand>();
 
-    //     //Assert.Throws<Exception>(() => thread.Object.execute());
-    //     //thread.Object.execute();
-    //     //Assert.True(thread.Object.thread.IsAlive);
+        thread.Object.queue.Push(cmd.Object);
 
-    //     var hardStopThreadStrategy = new HardStopThreadStrategy();
-    //     ICommand hs = (ICommand)hardStopThreadStrategy.RunStrategy(thread.Object);
-    //     hs.execute();
+        var hardStopThreadStrategy = new HardStopThreadStrategy();
+        ICommand hs = (ICommand)hardStopThreadStrategy.RunStrategy(thread.Object);
+        hs.execute();
 
-    //     Assert.True(thread.Object.stop);
-
-
-
-    //     //var hs = new Mock<HardStopCommand>(thread.Object);
-    //     //receiver.Object.Push(hs.Object);
-    //     //Assert.False(thread.Object.thread.IsAlive);
-
-    //     // var SendCommand = new SendCommand(thread.Object, hs.Object);
-    //     // var HardStopThreadStrategy = new HardStopThreadStrategy();
-    //     // SendCommand.execute();
-
-    //     //HardStopCommandStrategy.Setup(c => c.RunStrategy()).Returns(0).Verifiable();
-    // }
+        Assert.True(thread.Object.stop);
+        Assert.False(receiver.Object.isEmpty());
+    }
 
     [Fact]
     public void SoftStopCheck()
@@ -142,7 +91,7 @@ public class MultiThreadedStategulServerTests
 
         CancellationTokenSource tokenSource = new();
         thread.Object.thread = new(
-            () => LongRunningOperation(tokenSource.Token) // Pass the token to the thread you want to stop.
+            () => LongRunningOperation(tokenSource.Token)
         );
 
         var CreateAndStartThreadStrategy = new CreateAndStartThreadStrategy();
@@ -159,10 +108,12 @@ public class MultiThreadedStategulServerTests
         Assert.True(thread.Object.stop);
         
         Thread.Sleep(1500);
-        tokenSource.Cancel(); // Request cancellation. 
-        thread.Object.thread.Join(); // If you want to wait for cancellation, `Join` blocks the calling thread until the thread represented by this instance terminates.
-        tokenSource.Dispose(); // Dispose the token source.
+        tokenSource.Cancel();
+        thread.Object.thread.Join();
+        tokenSource.Dispose();
         Thread.Sleep(1500);
+
+        Assert.True(receiver.Object.isEmpty());
     }
 
     [Fact]
@@ -177,7 +128,6 @@ public class MultiThreadedStategulServerTests
 
         cmd.Setup(x => x.execute()).Throws<Exception>().Verifiable();
         thread.Object.queue.Push(cmd.Object);
-        //Assert.Throws<Exception>(() => thread.Object.strategy());
         thread.Object.strategy();
         exceptionHandlerStrategy.Verify();
     }
@@ -190,16 +140,16 @@ public class MultiThreadedStategulServerTests
 
         CancellationTokenSource tokenSource = new();
         thread.Object.thread = new(
-            () => LongRunningOperation(tokenSource.Token) // Pass the token to the thread you want to stop.
+            () => LongRunningOperation(tokenSource.Token)
         );
         var CreateAndStartThreadStrategy = new CreateAndStartThreadStrategy();
         ICommand cast = IoC.Resolve<ICommand>("Game.CreateAndStartThread", thread.Object);
         cast.execute();
 
         Thread.Sleep(1500);
-        tokenSource.Cancel(); // Request cancellation. 
-        thread.Object.thread.Join(); // If you want to wait for cancellation, `Join` blocks the calling thread until the thread represented by this instance terminates.
-        tokenSource.Dispose(); // Dispose the token source.
+        tokenSource.Cancel();
+        thread.Object.thread.Join();
+        tokenSource.Dispose();
         Thread.Sleep(1500);
     }
 }
