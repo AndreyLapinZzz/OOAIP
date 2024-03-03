@@ -9,7 +9,6 @@ public class HardStopCommand : ICommand
     public HardStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
     public void execute()
     {
-
         stoppingThread.Stop();
     }
 }
