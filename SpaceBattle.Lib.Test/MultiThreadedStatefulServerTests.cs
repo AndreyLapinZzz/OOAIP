@@ -32,7 +32,7 @@ public class MultiThreadedStategulServerTests
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandlerStrategy.Object.RunStrategy(args)).Execute();
     }
 
-    public void LongRunningOperation(CancellationToken token)
+    public void ReadToken(CancellationToken token)
     {
         while(!token.IsCancellationRequested) {
             autoEvent.WaitOne(500);
@@ -72,12 +72,12 @@ public class MultiThreadedStategulServerTests
         var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
         var thread = new Mock<MyThread>(receiver.Object);
         var cmd = new Mock<ICommand>();
+        var action = new Mock<Action>();
 
         thread.Object.queue.Push(cmd.Object);
 
         var hardStopThreadStrategy = new HardStopThreadStrategy();
-        ICommand hs = (ICommand)hardStopThreadStrategy.RunStrategy(thread.Object);
-        hs.execute();
+        ICommand hs = (ICommand)hardStopThreadStrategy.RunStrategy(thread.Object, action.Object);
 
         Assert.True(thread.Object.stop);
         Assert.False(receiver.Object.isEmpty());
@@ -88,11 +88,13 @@ public class MultiThreadedStategulServerTests
     {
         var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
         var thread = new Mock<MyThread>(receiver.Object);
+        var cmd1 = new Mock<ICommand>();
+        var cmd2 = new Mock<ICommand>();
         Assert.Equal(thread.Object.queue, receiver.Object);
 
         CancellationTokenSource tokenSource = new();
         thread.Object.thread = new(
-            () => LongRunningOperation(tokenSource.Token)
+            () => ReadToken(tokenSource.Token)
         );
 
         var CreateAndStartThreadStrategy = new CreateAndStartThreadStrategy();
@@ -101,20 +103,23 @@ public class MultiThreadedStategulServerTests
 
         var softStopThreadStrategy = new SoftStopThreadStrategy();
         ICommand ss = (ICommand)softStopThreadStrategy.RunStrategy(thread.Object);
-        ss.execute();
 
-        ICommand hs = receiver.Object.Receive();
-        hs.execute();
+        thread.Object.queue.Push(cmd1.Object);
+        thread.Object.queue.Push(ss);
+        thread.Object.queue.Push(cmd2.Object);
+
+        thread.Object.queue.Receive().execute();
+        thread.Object.queue.Receive().execute();
+
+        Assert.False(receiver.Object.isEmpty());
+        Assert.Equal(thread.Object.queue.Receive(), cmd2.Object);
+        Assert.True(thread.Object.queue.isEmpty());
 
         Assert.True(thread.Object.stop);
         
-        autoEvent.WaitOne(1500);
         tokenSource.Cancel();
         thread.Object.thread.Join();
         tokenSource.Dispose();
-        autoEvent.WaitOne(1500);
-
-        Assert.True(receiver.Object.isEmpty());
     }
 
     [Fact]
@@ -141,7 +146,7 @@ public class MultiThreadedStategulServerTests
 
         CancellationTokenSource tokenSource = new();
         thread.Object.thread = new(
-            () => LongRunningOperation(tokenSource.Token)
+            () => ReadToken(tokenSource.Token)
         );
         var CreateAndStartThreadStrategy = new CreateAndStartThreadStrategy();
         ICommand cast = IoC.Resolve<ICommand>("Game.CreateAndStartThread", thread.Object);
@@ -150,7 +155,5 @@ public class MultiThreadedStategulServerTests
         tokenSource.Cancel();
         thread.Object.thread.Join();
         tokenSource.Dispose();
-
-        autoEvent.WaitOne(1500);
     }
 }

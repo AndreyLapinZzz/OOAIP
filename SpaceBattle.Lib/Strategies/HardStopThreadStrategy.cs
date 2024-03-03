@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace SpaceBattle.Lib;
 
 public class HardStopThreadStrategy : IStrategy
@@ -5,8 +7,8 @@ public class HardStopThreadStrategy : IStrategy
     public object RunStrategy(params object[] args)
     {
         MyThread stoppingThread = (MyThread) args[0];
-        ICommand hardStopCommand = new HardStopCommand(stoppingThread);
+        stoppingThread.Stop();
 
-        return hardStopCommand;
+        return new HardStopCommand(stoppingThread);
     }
 }
