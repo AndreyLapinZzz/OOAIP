@@ -156,4 +156,31 @@ public class MultiThreadedStategulServerTests
         thread.Object.thread.Join();
         tokenSource.Dispose();
     }
+
+    [Fact]
+    public void SendCommandCheck()
+    {
+        var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
+        var thread = new Mock<MyThread>(receiver.Object);
+        var cmd = new Mock<ICommand>();
+
+        CancellationTokenSource tokenSource = new();
+        thread.Object.thread = new(
+            () => ReadToken(tokenSource.Token)
+        );
+
+        var CreateAndStartThreadStrategy = new CreateAndStartThreadStrategy();
+        ICommand cast = IoC.Resolve<ICommand>("Game.CreateAndStartThread", thread.Object);
+        cast.execute();
+
+        var SendCommandStrategy = new SendCommandStrategy();
+        ICommand send = IoC.Resolve<ICommand>("Game.SendCommand", thread.Object, cmd.Object);
+        thread.Object.queue.Push(send);
+        Assert.False(thread.Object.queue.isEmpty());
+        thread.Object.strategy();
+
+        tokenSource.Cancel();
+        thread.Object.thread.Join();
+        tokenSource.Dispose();
+    }
 }
