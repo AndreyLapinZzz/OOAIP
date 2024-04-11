@@ -32,7 +32,7 @@ public class MultiThreadedStategulServerTests
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandlerStrategy.Object.RunStrategy(args)).Execute();
     }
 
-    public void ReadToken(CancellationToken token)
+    internal void ReadToken(CancellationToken token)
     {
         while(!token.IsCancellationRequested) {
             autoEvent.WaitOne(500);
