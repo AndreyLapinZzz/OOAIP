@@ -8,6 +8,21 @@ public class SoftStopCommand : ICommand
     public SoftStopCommand(MyThread stoppingThread) => this.stoppingThread = stoppingThread;
     public void execute()
     {
-        stoppingThread.Stop();
+        var cmd = new UpdateBehaviourCommand
+            (
+                stoppingThread,
+                () =>
+                {
+                    if (stoppingThread.queue.isEmpty())
+                    {
+                        stoppingThread.Stop();
+                    }
+                    else
+                    {
+                        stoppingThread.HandleCommand();
+                    }
+                }
+            );
+        cmd.execute();
     }
 }
