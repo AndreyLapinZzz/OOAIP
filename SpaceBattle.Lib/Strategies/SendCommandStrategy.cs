@@ -7,9 +7,9 @@ public class SendCommandStrategy : IStrategy
     {
         MyThread thread = (MyThread)args[0];
         ICommand cmd = (ICommand)args[1];
-
-        ICommand sendCommand = new SendCommand(thread, cmd);
-
-        return sendCommand;
+        return new ActionCommand((arg) =>
+        {
+            ICommand send = IoC.Resolve<ICommand>("Thread.SendCommand", thread, cmd);
+        });
     }
 }
