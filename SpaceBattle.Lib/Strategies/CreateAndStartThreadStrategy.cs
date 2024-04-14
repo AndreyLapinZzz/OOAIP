@@ -4,10 +4,22 @@ public class CreateAndStartThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        MyThread thread = (MyThread)args[0];
-
-        ICommand createAndStartThread = new CreateAndStartThreadCommand(thread);
-        
-        return createAndStartThread;
+        string thread_id = (string)args[0];
+        Action? acmd = null;
+        if (args.Length > 1)
+        {
+            acmd = (Action)args[1];
+        }
+        return new ActionCommand((arg) =>
+        {
+            try{
+            var cmd = new CreateAndStartThreadCommand(thread_id);
+            cmd.execute();}
+            finally{
+            if (acmd != null)
+            {
+                acmd();
+            }}
+        });
     }
 }

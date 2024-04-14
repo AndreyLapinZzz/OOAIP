@@ -16,9 +16,4 @@ public class ReceiveAdapter : IReceiver
     {
         return queue.LongCount() == 0;
     }
-    
-    public void Push(ICommand cmd)
-    {
-        queue.Add(cmd);
-    }
 }

@@ -5,7 +5,7 @@ public class HardStopThreadStrategy : IStrategy
 {
     public object RunStrategy(params object[] args)
     {
-        MyThread thread = (MyThread)args[0];
+        string thread_id = (string)args[0];
         Action? acmd = null;
         if (args.Length > 1)
         {
@@ -13,8 +13,9 @@ public class HardStopThreadStrategy : IStrategy
         }
         return new ActionCommand((arg) =>
         {
-            var cmd = new HardStopCommand(thread);
-            IoC.Resolve<ActionCommand>("Thread.SendCommand", thread, cmd).execute();
+            MyThread th = IoC.Resolve<MyThread>("GetThread", thread_id);
+            var cmd = new HardStopCommand(th);
+            IoC.Resolve<ActionCommand>("Thread.SendCommand", thread_id, cmd).execute();
             if (acmd != null)
             {
                 acmd();

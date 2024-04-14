@@ -1,19 +1,17 @@
-using Hwdtech;
+using System.Collections.Concurrent;
+
 namespace SpaceBattle.Lib;
 
-public class SendCommand : ICommand
+public class SendCommand : ISender
 {
-    MyThread thread;
-    ICommand cmd;
+    BlockingCollection<ICommand> queue;
 
-    public SendCommand(MyThread thread, ICommand cmd)
+    public SendCommand(BlockingCollection<ICommand> queue)
     {
-        this.thread = thread;
-        this.cmd = cmd;
+        this.queue = queue;
     }
-
-    public void execute()
+    public void Send(ICommand cmd)
     {
-        thread.queue.Push(cmd);
+        queue.Add(cmd);
     }
 }
