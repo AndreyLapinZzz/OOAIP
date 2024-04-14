@@ -10,28 +10,61 @@ namespace SpaceBattle.Lib.Test;
 
 public class MultiThreadedStategulServerTests
 {
+    Mock<IStrategy> exceptionHandler = new Mock<IStrategy>();
     public MultiThreadedStategulServerTests()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
+
+        // var m_exceptionHandler = new Mock<ExceptionHandler>();
+        // var m_handler = new Mock<IStrategy>();
+        // m_handler.Setup(m => m.уxecute(It.IsAny<object[]>())).Returns(m_exceptionHandler.Object);
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
 
-    // [Fact]
-    // public void HardStopCheck()
-    // {
-    //     var receiver = new Mock<ReceiveAdapter>(new Mock<BlockingCollection<ICommand>>().Object);
-    //     var thread = new Mock<MyThread>(receiver.Object);
-    //     var cmd = new Mock<ICommand>();
-    //     var action = new Mock<Action>();
+    [Fact]
+    public void HardStopCheck()
+    {
+        var queue = new BlockingCollection<ICommand>(100);
+        var sender = new SendCommand(queue);
+        var reciever = new ReceiveAdapter(queue);
+        var thread = new MyThread(reciever);
+        var m_thread_tree_Strategy = new Mock<IStrategy>();
+        m_thread_tree_Strategy.Setup(m => m.RunStrategy("Thread_id")).Returns(thread);
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "GetThread", (object[] args) => m_thread_tree_Strategy.Object.RunStrategy(args)).Execute();
+        var m_sender_tree_Strategy = new Mock<IStrategy>();
+        m_sender_tree_Strategy.Setup(m => m.RunStrategy("Thread_id")).Returns(sender);
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Thread.GetSender", (object[] args) => m_sender_tree_Strategy.Object.RunStrategy(args)).Execute();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Thread.SendCommand", (object[] args) => new SendCommandStrategy().RunStrategy(args)).Execute();
+        var hs_strategy = new HardStopThreadStrategy();
+        Assert.True(reciever.isEmpty());
+        var hs = (ActionCommand)hs_strategy.RunStrategy("Thread_id");
+        hs.execute();
+        Assert.False(reciever.isEmpty());
+    }
 
-    //     thread.Object.queue.Push(cmd.Object);
-
-    //     var hardStopThreadStrategy = new HardStopThreadStrategy();
-    //     ICommand hs = (ICommand)hardStopThreadStrategy.RunStrategy(thread.Object, action.Object);
-
-    //     Assert.True(thread.Object.stop);
-    //     Assert.False(receiver.Object.isEmpty());
-    // }
+    [Fact]
+    public void ThreadHardStopStrategyWithActionTest()
+    {
+        bool actioncall = false;
+        var queue = new BlockingCollection<ICommand>(100);
+        var sender = new SendCommand(queue);
+        var reciever = new ReceiveAdapter(queue);
+        var thread = new MyThread(reciever);
+        var m_thread_tree_Strategy = new Mock<IStrategy>();
+        m_thread_tree_Strategy.Setup(m => m.RunStrategy("Thread_id")).Returns(thread);
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "GetThread", (object[] args) => m_thread_tree_Strategy.Object.RunStrategy(args)).Execute();
+        var m_sender_tree_Strategy = new Mock<IStrategy>();
+        m_sender_tree_Strategy.Setup(m => m.RunStrategy("Thread_id")).Returns(sender);
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Thread.GetSender", (object[] args) => m_sender_tree_Strategy.Object.RunStrategy(args)).Execute();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Thread.SendCommand", (object[] args) => new SendCommandStrategy().RunStrategy(args)).Execute();
+        var hs_strategy = new HardStopThreadStrategy();
+        Assert.True(reciever.isEmpty());
+        var hs = (ActionCommand)hs_strategy.RunStrategy("Thread_id", ()=>{actioncall=true;});
+        hs.execute();
+        Assert.False(reciever.isEmpty());
+        Assert.True(actioncall);
+    }
 
     // [Fact]
     // public void SoftStopCheck()
