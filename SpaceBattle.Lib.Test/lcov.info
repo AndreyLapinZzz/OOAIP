@@ -21,6 +21,26 @@ BRH:2
 FNF:2
 FNH:2
 end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\GameQueue\GameQueuePushCommand.cs
+FN:12,System.Void SpaceBattle.Lib.GameQueuePushCommand::execute()
+FNDA:1,System.Void SpaceBattle.Lib.GameQueuePushCommand::execute()
+DA:13,1
+DA:15,1
+DA:17,1
+FN:6,System.Void SpaceBattle.Lib.GameQueuePushCommand::.ctor(System.Collections.Generic.Queue`1<SpaceBattle.Lib.ICommand>,SpaceBattle.Lib.ICommand)
+FNDA:1,System.Void SpaceBattle.Lib.GameQueuePushCommand::.ctor(System.Collections.Generic.Queue`1<SpaceBattle.Lib.ICommand>,SpaceBattle.Lib.ICommand)
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+LF:8
+LH:8
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
 SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\MarcoCommand\BuildMacroCommandStrategy.cs
 FN:7,System.Object SpaceBattle.Lib.BuildMacroCommandStrategy::RunStrategy(System.Object[])
 FNDA:1,System.Object SpaceBattle.Lib.BuildMacroCommandStrategy::RunStrategy(System.Object[])
@@ -431,6 +451,22 @@ LF:19
 LH:19
 BRF:4
 BRH:4
+FNF:1
+FNH:1
+end_of_record
+SF:C:\Univer\Новая папка\OOAIP\SpaceBattle.Lib\Strategies\GameQueuePushCommandStrategy.cs
+FN:6,System.Object SpaceBattle.Lib.GameQueuePushCommandStrategy::RunStrategy(System.Object[])
+FNDA:1,System.Object SpaceBattle.Lib.GameQueuePushCommandStrategy::RunStrategy(System.Object[])
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+LF:6
+LH:6
+BRF:0
+BRH:0
 FNF:1
 FNH:1
 end_of_record
