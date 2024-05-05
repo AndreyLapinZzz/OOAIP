@@ -10,7 +10,7 @@ public class ConstructCommandStrategy : IStrategy
         var parameters = mess.CommandParams;
         foreach (KeyValuePair<string, object> par in parameters)
         {
-            IoC.Resolve<ICommand>("UObjectsetProperty", gameObj, par.Key, par.Value).execute();
+            IoC.Resolve<ICommand>("Game.SetProperty", gameObj, par.Key, par.Value).execute();
         }
         string dep_name = mess.CommandName+"Command";
         return IoC.Resolve<ICommand>(dep_name, gameObj);
