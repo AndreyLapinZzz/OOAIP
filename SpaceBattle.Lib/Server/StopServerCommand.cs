@@ -8,7 +8,7 @@ public class StopServerCommand : ICommand
         int[] IdsArray = IoC.Resolve<BlockingCollection<int>>("ThreadsIDs").ToArray();
         foreach (int id in IdsArray) {
             ICommand softStopCommand = IoC.Resolve<ICommand>("Soft Stop The Thread", id);
-            try(){
+            try{
                 softStopCommand.execute();
             } catch (Exception e)
             {
