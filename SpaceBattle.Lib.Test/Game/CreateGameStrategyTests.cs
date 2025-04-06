@@ -1,14 +1,10 @@
 using Hwdtech;
 using Hwdtech.Ioc;
 using Moq;
-using System.Windows.Input;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
-using SpaceBattle.Lib;
-
 
 namespace SpaceBattle.Lib.Test;
 
@@ -18,10 +14,8 @@ public class CreateGameStrategyTests
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
-        //IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
     
-    //1)Ошибка внутри стратегии
     [Fact]
     public void ErrorInGameCommandCreateTest()
     {
@@ -54,7 +48,6 @@ public class CreateGameStrategyTests
         mockCreateGameCommandStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
     
-    //2)Нет стратегии
     [Fact]
     public void GameCommandCreateNotInIoCTest()
     {
@@ -78,7 +71,6 @@ public class CreateGameStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //3)Ок
     [Fact]
     public void ArgsIsEmptyTest()
     {

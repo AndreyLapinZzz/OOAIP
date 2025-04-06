@@ -1,14 +1,10 @@
 using Hwdtech;
 using Hwdtech.Ioc;
 using Moq;
-using System.Windows.Input;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
-using SpaceBattle.Lib;
-
 
 namespace SpaceBattle.Lib.Test;
 
@@ -18,10 +14,8 @@ public class DeleteGameStrategyTests
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
-        //IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
 
-    //1)Нут стратегии
     [Fact]
     public void GameCommandDeleteNotInIoCTest()
     {
@@ -29,7 +23,7 @@ public class DeleteGameStrategyTests
         DeleteGameStrategy myStrategy = new DeleteGameStrategy();
         Assert.Throws<ArgumentException>(() => myStrategy.RunStrategy(time));
     }
-    //2) Ошибка в стратегии
+    
     [Fact]
     public void ErrorInGameCommandDeleteTest()
     {
@@ -46,7 +40,7 @@ public class DeleteGameStrategyTests
         Assert.Throws<InvalidOperationException>(() => myStrategy.RunStrategy(time));
         mockGameCommandDeleteStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //3)Нет аргумента 
+    
     [Fact]
     public void NoArgsGameCommandDeleteTest()
     {
@@ -63,7 +57,7 @@ public class DeleteGameStrategyTests
         Assert.Throws<IndexOutOfRangeException>(() => myStrategy.RunStrategy());
         mockGameCommandDeleteStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Never());
     }
-    //4)Нут стратегии
+    
     [Fact]
     public void DeleteGameScopeNotInIoCTest()
     {
@@ -81,7 +75,7 @@ public class DeleteGameStrategyTests
         Assert.Throws<ArgumentException>(() => myStrategy.RunStrategy(time));
         mockGameCommandDeleteStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //5) Ошибка в стратегии
+    
     [Fact]
     public void ErrorInDeleteGameScopeTest()
     {
@@ -109,9 +103,7 @@ public class DeleteGameStrategyTests
         mockGameCommandDeleteStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockDeleteGameScopeStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //6)Нет аргумента 
- 
-    //7)Нут стратегии
+
     [Fact]
     public void BuildMacroCommandNotInIoCTest()
     {
@@ -140,7 +132,7 @@ public class DeleteGameStrategyTests
         mockGameCommandDeleteStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockDeleteGameScopeStrategy.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //8) Ошибка в стратегии
+    
     [Fact]
     public void ErrorInBuildMacroCommandTest()
     {

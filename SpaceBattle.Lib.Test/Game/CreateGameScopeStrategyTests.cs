@@ -1,11 +1,9 @@
 using Hwdtech;
 using Hwdtech.Ioc;
 using Moq;
-using System.Windows.Input;
 using System;
 using System.Collections.Generic;
 using Xunit;
-using SpaceBattle.Lib;
 using System.Collections;
 
 namespace SpaceBattle.Lib.Test;
@@ -16,18 +14,15 @@ public class CreateGameScopeStrategyTests
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
-        //IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
 
-    //1)аргс пустой
     [Fact]
     public void ArgsIsEmptyTest()
     {
         CreateGameScopeStrategy myStrategy = new CreateGameScopeStrategy();
         Assert.Throws<IndexOutOfRangeException>(() => myStrategy.RunStrategy());
     }
-    
-    //2)Нет стратегии
+ 
     [Fact]
     public void ServerGameIDNewStrategyNotInIoCTest()
     {
@@ -35,8 +30,7 @@ public class CreateGameScopeStrategyTests
         CreateGameScopeStrategy myStrategy = new CreateGameScopeStrategy();
         Assert.Throws<ArgumentException>(() => myStrategy.RunStrategy(args));
     }
-    
-    //3)Ошибка в стратегии
+  
     [Fact]
     public void ErrorInServerGameIDNewStrategyTest()
     {
@@ -54,7 +48,6 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
     
-    //4)Возвращает не тот тип
     [Fact]
     public void NotStringServerGameIDNewStrategyTest()
     {
@@ -72,8 +65,7 @@ public class CreateGameScopeStrategyTests
         Assert.Throws<InvalidCastException>(() => myStrategy.RunStrategy(args));
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    
-    //5)Проверить что получено idGame 
+     
     [Fact]
     public void ReceivedGameIDTest()
     {
@@ -101,7 +93,6 @@ public class CreateGameScopeStrategyTests
         Assert.Equal(newId, idGame);
     }
     
-    //6)Проверить что очередь пустая
     [Fact]
     public void QueueEmptyTest()
     {
@@ -126,10 +117,9 @@ public class CreateGameScopeStrategyTests
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Equal(0, queue.Count);
+        Assert.Empty(queue);
     }
-    
-    //7)Проверить что словарь пустой
+
     [Fact]
     public void EntitiesEmptyTest()
     {
@@ -154,10 +144,9 @@ public class CreateGameScopeStrategyTests
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Equal(0, entities.Count);
+        Assert.Empty(entities);
     }
     
-    //8)Проверить что получено  quantumTime
     [Fact]
     public void ReceivedQuantumTimeTest()
     {
@@ -184,8 +173,7 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         Assert.Equal(time[0], quantumTime);
     }
-    
-    //9)Список аргументов пустой
+
     [Fact]
     public void EnqueueArgsEmptyTest()
     {
@@ -205,15 +193,12 @@ public class CreateGameScopeStrategyTests
         object oldScope = IoC.Resolve<object>("Scopes.Current");
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", newScope).Execute();
 
-        ICommand result = null;
-        Assert.Throws<IndexOutOfRangeException>(() => result = IoC.Resolve<ICommand>("Enqueue"));
+        Assert.Throws<IndexOutOfRangeException>(() =>  IoC.Resolve<ICommand>("Enqueue"));
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Null(result);
     }
 
-    //10)Если первый аргумент не команда
     [Fact]
     public void EnqueueFirstArgNotCommandTest()
     {
@@ -233,15 +218,12 @@ public class CreateGameScopeStrategyTests
         object oldScope = IoC.Resolve<object>("Scopes.Current");
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", newScope).Execute();
 
-        ICommand result = null;
-        Assert.Throws<InvalidCastException>(() => result = IoC.Resolve<ICommand>("Enqueue", 2));
+        Assert.Throws<InvalidCastException>(() => IoC.Resolve<ICommand>("Enqueue", 2));
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Null(result);
     }
     
-    //11)Есть лишние параметры
     [Fact]
     public void EnqueueExtraParametersTest()
     {
@@ -271,10 +253,9 @@ public class CreateGameScopeStrategyTests
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Equal(1, queue.Count);
+        Assert.Single(queue);
     }
-    
-    //12)Всё ок, очередь пополнилась
+
     [Fact]
     public void EnqueueOKTest()
     {
@@ -303,10 +284,9 @@ public class CreateGameScopeStrategyTests
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Equal(1, queue.Count);
+        Assert.Single(queue);
     }
-    
-    //15)Есть лишние параметры
+
     [Fact]
     public void Test()
     {
@@ -339,11 +319,10 @@ public class CreateGameScopeStrategyTests
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", oldScope).Execute();
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        Assert.Equal(1, queue.Count);
+        Assert.Single(queue);
         Assert.Equal(mockICommand1.Object, result);
     }
-    
-    //16)Нет команды в очереди
+
     [Fact]
     public void DequeueNoCommandInQueueTest()
     {
@@ -371,8 +350,7 @@ public class CreateGameScopeStrategyTests
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    
-    //17)Очередь стала меньше
+
     [Fact]
     public void DequeueStrategyIsCorrectTest()
     {
@@ -405,10 +383,9 @@ public class CreateGameScopeStrategyTests
 
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         Assert.Equal(mockICommand1.Object, result);
-        Assert.Equal(1, queue.Count);
+        Assert.Single(queue);
     }
 
-    //18)Список аргументов пустой
     [Fact]
     public void GetObjectArgsEmptyTest()
     {
@@ -438,7 +415,6 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //19)Если первый аргумент не строчка
     [Fact]
     public void GetObjectFirstArgNotStringTest()
     {
@@ -469,7 +445,6 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //20)Есть лишние параметры
     [Fact]
     public void GetObjectExtraParametersTest()
     {
@@ -500,8 +475,7 @@ public class CreateGameScopeStrategyTests
 
         Assert.Equal(obj.Object, result);
     }
-    
-    //21)Всё ок
+
     [Fact]
     public void GetObjectOKTest()
     {
@@ -533,7 +507,6 @@ public class CreateGameScopeStrategyTests
         Assert.Equal(obj.Object, result);
     }
 
-    //22)Список аргументов пустой
     [Fact]
     public void RemoveObjectArgsEmptyTest()
     {
@@ -564,7 +537,6 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //23)Если первый аргумент не строчка
     [Fact]
     public void RemoveObjectFirstArgNotStringTest()
     {
@@ -595,7 +567,6 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //24)Есть лишние параметры
     [Fact]
     public void RemoveObjectExtraParametersTest()
     {
@@ -630,10 +601,9 @@ public class CreateGameScopeStrategyTests
 
         Assert.True(result);
         Assert.Equal(obj2L, ent.Values);
-        Assert.Equal(1, ent.Count);
+        Assert.Single(ent);
     }
-    
-    //25)Нет такого объекта
+
     [Fact]
     public void RemoveObjectNoObjectTest()
     {
@@ -662,8 +632,7 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         Assert.False(result);
     }
-    
-    //26)Объект удалён
+
     [Fact]
     public void RemoveObjectOKTest()
     {
@@ -699,10 +668,9 @@ public class CreateGameScopeStrategyTests
         mockNewGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         Assert.Equal(true, result);
         Assert.Equal(obj2L, ent.Values);
-        Assert.Equal(1, ent.Count);
+        Assert.Single(ent);
     }
 
-    //27)Старый скоп вернулся
     [Fact]
     public void OldScopeReturnedTest()
     {
@@ -724,5 +692,4 @@ public class CreateGameScopeStrategyTests
 
         Assert.Equal(oldScope, currentScope);
     }
-    
 }
