@@ -1,7 +1,6 @@
 using Hwdtech;
 using Hwdtech.Ioc;
 using Moq;
-using System.Windows.Input;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ public class WriteExeptionCommandTests
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
-        //IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
 
     [Fact]

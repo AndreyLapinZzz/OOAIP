@@ -1,12 +1,9 @@
 using Hwdtech;
 using Hwdtech.Ioc;
 using Moq;
-using System.Windows.Input;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using System.IO;
-using System.Collections.Generic;
 
 namespace SpaceBattle.Lib.Test;
 
@@ -16,9 +13,8 @@ public class StopServerCommandTests
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
-        //IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
-    //1)Нет такой стратегии в айоке
+
     [Fact]
     public void ThreadsIDsStrategyNotInIoCTest()
     {        
@@ -26,7 +22,7 @@ public class StopServerCommandTests
         var act = () => cmd.execute();
         Assert.Throws<ArgumentException>(act);
     }
-    //2)Возвращает не тот тип
+
     [Fact]
     public void NotBlockingCollectionTest()
     {
@@ -45,7 +41,6 @@ public class StopServerCommandTests
         Assert.Throws<InvalidCastException>(act);
     }
 
-    //3)Ошибка внутри стратегии
     [Fact]
     public void ErrorInThreadsIDsStrategyTest()
     {
@@ -61,7 +56,6 @@ public class StopServerCommandTests
         Assert.Throws<InvalidOperationException>(act);
     }
 
-    //1)Нет такой стратегии в айоке
     [Fact]
     public void SoftStopStrategyNotInIoCTest()
     {
@@ -79,7 +73,7 @@ public class StopServerCommandTests
         Assert.Throws<ArgumentException>(act); //Как тогда проверить?
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //2)Возвращает не тот тип
+    
     [Fact]
     public void NotICommandSoftStopTest()
     {
@@ -107,7 +101,7 @@ public class StopServerCommandTests
 
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //3)Ошибка внутри стратегии
+    
     [Fact]
     public void ErrorInSoftStopTheThreadStrategyTest()
     {
@@ -134,7 +128,7 @@ public class StopServerCommandTests
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //Если вызывает ексепшен
+    
     [Fact]
     public void CallExceptionTest()
     {
@@ -165,6 +159,15 @@ public class StopServerCommandTests
             (object[] args) => mockExceptionHandler.Object.RunStrategy(args)
         ).Execute();
 
+        Mock<ICommand> mockWaitForStopAllThreadCommand = new();
+        Mock<IStrategy> mockWaitForStopAllThread = new();
+        mockWaitForStopAllThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockWaitForStopAllThreadCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "WaitForStopAllThread",
+            (object[] args) => mockWaitForStopAllThread.Object.RunStrategy(args)
+        ).Execute();
+
         StopServerCommand cmd = new StopServerCommand();
 
         mockSoftStopCommand.Setup(
@@ -179,15 +182,15 @@ public class StopServerCommandTests
 
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        mockSoftStopCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
         mockExceptionHandler.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockExceptionHandlerCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
+        mockWaitForStopAllThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //2) Не вызывает
+
     [Fact]
     public void NotCallExceptionTest()
     {
-        BlockingCollection<int> idsArray = new BlockingCollection<int>() {0, 1, 2};
+        BlockingCollection<int> idsArray = new BlockingCollection<int>() {0};
         Mock<IStrategy> mockThreadsIDs = new();
         mockThreadsIDs.Setup(
             strategy => strategy.RunStrategy(It.IsAny<object[]>())
@@ -205,6 +208,24 @@ public class StopServerCommandTests
             (object[] args) => mockSoftStopTheThread.Object.RunStrategy(args)
         ).Execute();
 
+        Mock<ICommand> mockCommandsSendCommandCommand = new();
+        Mock<IStrategy> mockCommandsSendCommand = new();
+        mockCommandsSendCommand.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockCommandsSendCommandCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Commands.SendCommand",
+            (object[] args) => mockCommandsSendCommand.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockWaitForStopAllThreadCommand = new();
+        Mock<IStrategy> mockWaitForStopAllThread = new();
+        mockWaitForStopAllThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockWaitForStopAllThreadCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "WaitForStopAllThread",
+            (object[] args) => mockWaitForStopAllThread.Object.RunStrategy(args)
+        ).Execute();
+
         StopServerCommand cmd = new StopServerCommand();
 
         mockSoftStopCommand.Setup(
@@ -214,10 +235,11 @@ public class StopServerCommandTests
         cmd.execute();
 
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(3));
-        mockSoftStopCommand.Verify(cmd => cmd.execute(), Times.Exactly(3));
+        mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockCommandsSendCommand.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockWaitForStopAllThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //1)Нет такой стратегии в айоке
+
     [Fact]
     public void ExceptionHandlerStrategyNotInIoCTest()
     {
@@ -249,10 +271,8 @@ public class StopServerCommandTests
         Assert.Throws<ArgumentException>(act);
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        mockSoftStopCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
     }
 
-    //2)Возвращает не тот тип
     [Fact]
     public void NotICommandExceptionHandlerTest()
     {
@@ -293,9 +313,8 @@ public class StopServerCommandTests
         Assert.Throws<InvalidCastException>(act);
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        mockSoftStopCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
     }
-    //3)Ошибка внутри стратегии
+
     [Fact]
     public void ErrorInExceptionHandlerTest()
     {
@@ -336,10 +355,9 @@ public class StopServerCommandTests
         
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        mockSoftStopCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
         mockExceptionHandler.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
-    //4) Внутри айкоманда ошибка
+
     [Fact]
     public void ErrorInStopCommandTest()
     {
@@ -384,10 +402,201 @@ public class StopServerCommandTests
         Assert.Throws<InvalidOperationException>(act);
         mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
-        mockSoftStopCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
         mockExceptionHandler.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
         mockExceptionHandlerCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
     }
 
-    // Нет позитивного теста
+    [Fact]
+    public void WaitForStopAllThreadNotInIoCTest()
+    {
+        BlockingCollection<int> idsArray = new BlockingCollection<int>() { 0 };
+        Mock<IStrategy> mockThreadsIDs = new();
+        mockThreadsIDs.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(idsArray).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ThreadsIDs",
+            (object[] args) => mockThreadsIDs.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockSoftStopCommand = new();
+        Mock<IStrategy> mockSoftStopTheThread = new();
+        mockSoftStopTheThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockSoftStopCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Soft Stop The Thread",
+            (object[] args) => mockSoftStopTheThread.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockExceptionHandlerCommand = new();
+        Mock<IStrategy> mockExceptionHandler = new();
+        mockExceptionHandler.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockExceptionHandlerCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ExceptionHandler",
+            (object[] args) => mockExceptionHandler.Object.RunStrategy(args)
+        ).Execute();
+
+        StopServerCommand cmd = new StopServerCommand();
+
+        var act = () => cmd.execute();
+
+        Assert.Throws<ArgumentException>(act);
+
+        mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void NotICommandWaitForStopAllThreadTest()
+    {
+        BlockingCollection<int> idsArray = new BlockingCollection<int>() { 0 };
+        Mock<IStrategy> mockThreadsIDs = new();
+        mockThreadsIDs.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(idsArray).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ThreadsIDs",
+            (object[] args) => mockThreadsIDs.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockSoftStopCommand = new();
+        Mock<IStrategy> mockSoftStopTheThread = new();
+        mockSoftStopTheThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockSoftStopCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Soft Stop The Thread",
+            (object[] args) => mockSoftStopTheThread.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockExceptionHandlerCommand = new();
+        Mock<IStrategy> mockExceptionHandler = new();
+        mockExceptionHandler.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockExceptionHandlerCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ExceptionHandler",
+            (object[] args) => mockExceptionHandler.Object.RunStrategy(args)
+        ).Execute();
+
+        var Any = new object();
+        Mock<IStrategy> mockWaitForStopAllThread = new();
+        mockWaitForStopAllThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(Any).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "WaitForStopAllThread",
+            (object[] args) => mockWaitForStopAllThread.Object.RunStrategy(args)
+        ).Execute();
+
+        StopServerCommand cmd = new StopServerCommand();
+
+        var act = () => cmd.execute();
+
+        Assert.Throws<InvalidCastException>(act);
+
+        mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockWaitForStopAllThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+    }
+    
+    [Fact]
+    public void ErrorInWaitForStopAllThreadTest()
+    {
+        BlockingCollection<int> idsArray = new BlockingCollection<int>() { 0 };
+        Mock<IStrategy> mockThreadsIDs = new();
+        mockThreadsIDs.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(idsArray).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ThreadsIDs",
+            (object[] args) => mockThreadsIDs.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockSoftStopCommand = new();
+        Mock<IStrategy> mockSoftStopTheThread = new();
+        mockSoftStopTheThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockSoftStopCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Soft Stop The Thread",
+            (object[] args) => mockSoftStopTheThread.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockExceptionHandlerCommand = new();
+        Mock<IStrategy> mockExceptionHandler = new();
+        mockExceptionHandler.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockExceptionHandlerCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ExceptionHandler",
+            (object[] args) => mockExceptionHandler.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<IStrategy> mockWaitForStopAllThread = new();
+        mockWaitForStopAllThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Throws<InvalidOperationException>().Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "WaitForStopAllThread",
+            (object[] args) => mockWaitForStopAllThread.Object.RunStrategy(args)
+        ).Execute();
+
+        StopServerCommand cmd = new StopServerCommand();
+
+        var act = () => cmd.execute();
+
+        Assert.Throws<InvalidOperationException>(act);
+
+        mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockWaitForStopAllThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+    }
+    
+    [Fact]
+    public void ErrorInWaitForStopAllThreadCommandTest()
+    {
+        BlockingCollection<int> idsArray = new BlockingCollection<int>() { 0 };
+        Mock<IStrategy> mockThreadsIDs = new();
+        mockThreadsIDs.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(idsArray).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ThreadsIDs",
+            (object[] args) => mockThreadsIDs.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockSoftStopCommand = new();
+        Mock<IStrategy> mockSoftStopTheThread = new();
+        mockSoftStopTheThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockSoftStopCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Soft Stop The Thread",
+            (object[] args) => mockSoftStopTheThread.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockExceptionHandlerCommand = new();
+        Mock<IStrategy> mockExceptionHandler = new();
+        mockExceptionHandler.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockExceptionHandlerCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "ExceptionHandler",
+            (object[] args) => mockExceptionHandler.Object.RunStrategy(args)
+        ).Execute();
+
+        Mock<ICommand> mockWaitForStopAllThreadCommand = new();
+        Mock<IStrategy> mockWaitForStopAllThread = new();
+        mockWaitForStopAllThread.Setup(
+            strategy => strategy.RunStrategy(It.IsAny<object[]>())
+        ).Returns(mockWaitForStopAllThreadCommand.Object).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "WaitForStopAllThread",
+            (object[] args) => mockWaitForStopAllThread.Object.RunStrategy(args)
+        ).Execute();
+
+        StopServerCommand cmd = new StopServerCommand();
+
+        mockWaitForStopAllThreadCommand.Setup(
+            cmd => cmd.execute()
+        ).Throws<InvalidOperationException>().Verifiable();
+
+        var act = () => cmd.execute();
+
+        Assert.Throws<InvalidOperationException>(act);
+
+        mockThreadsIDs.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockSoftStopTheThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockWaitForStopAllThread.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
+        mockWaitForStopAllThreadCommand.Verify(cmd => cmd.execute(), Times.Exactly(1));
+    }
 }

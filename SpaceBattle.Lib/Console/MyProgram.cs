@@ -1,9 +1,8 @@
 namespace SpaceBattle.Lib;
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using Hwdtech;
 using System.Diagnostics.CodeAnalysis;
+
 [ExcludeFromCodeCoverage]
 class MyProgram{
     static void Main(string[] args){
