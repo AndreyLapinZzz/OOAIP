@@ -1,19 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib", "SpaceBattle.Lib\SpaceBattle.Lib.csproj", "{9A2DBECA-B106-4518-8D22-A934049D63E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Test", "SpaceBattle.Lib.Test\SpaceBattle.Lib.Test.csproj", "{A5E2815A-1C2D-4F92-BDBA-657A342256E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Endpoint", "Endpoint\Endpoint.csproj", "{D31355C0-B917-45D7-8443-BA1144658B9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9A2DBECA-B106-4518-8D22-A934049D63E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +23,15 @@ Global
 		{A5E2815A-1C2D-4F92-BDBA-657A342256E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5E2815A-1C2D-4F92-BDBA-657A342256E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5E2815A-1C2D-4F92-BDBA-657A342256E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D31355C0-B917-45D7-8443-BA1144658B9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D31355C0-B917-45D7-8443-BA1144658B9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D31355C0-B917-45D7-8443-BA1144658B9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D31355C0-B917-45D7-8443-BA1144658B9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {623792C0-DA93-4CFB-BC3D-A978E3796536}
 	EndGlobalSection
 EndGlobal
