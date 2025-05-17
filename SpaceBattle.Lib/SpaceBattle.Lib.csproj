@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ProjectGuid>{9A2DBECA-B106-4518-8D22-A934049D63E6}</ProjectGuid>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Hwdtech.Core" Version="1.0.0" />
     <PackageReference Include="Hwdtech.IoC" Version="1.0.0" />
     <PackageReference Include="Hwdtech.Ioc.ScopeBasedIoCImplementation" Version="1.0.0" />
     <PackageReference Include="Hwdtech.Ioc.SingleThreadScope" Version="1.0.0" />
   </ItemGroup>
+
 </Project>
