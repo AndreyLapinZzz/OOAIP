@@ -1,16 +1,10 @@
 using Microsoft.AspNetCore;
-using CoreWCF;
-using CoreWCF.Configuration;
-using Swashbuckle.AspNetCore.Swagger;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using System.Net;
 
 namespace Endpoint;
 /// <summary>
-/// comment
+/// Program
 /// </summary>
 [ExcludeFromCodeCoverage]
 public class Program

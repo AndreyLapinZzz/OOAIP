@@ -1,11 +1,7 @@
 using Hwdtech;
 using Hwdtech.Ioc;
 using Moq;
-using System.Windows.Input;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
 using Xunit;
 using SpaceBattle.Lib;
 
@@ -17,10 +13,8 @@ public class EndPointTests
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
-        //IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Game.ExceptionHandler", (object[] args) => exceptionHandler.Object.RunStrategy(args)).Execute();
     }
 
-    //1)Нет такой стратегии в айоке
     [Fact]
     public void GameGetThreadIDByGameIDNotInIoCTest()
     {
@@ -31,7 +25,6 @@ public class EndPointTests
         Assert.Throws<ArgumentException>(act);
     }
 
-    //2)Ошибка внутри стратегии
     [Fact]
     public void ErrorInGameGetThreadIDByGameIDTest()
     {
@@ -53,7 +46,6 @@ public class EndPointTests
         mockGameGetThreadIDByGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //3)Нет такой стратегии в айоке
     [Fact]
     public void CommandCreateFromMessageNotInIoCTest()
     {
@@ -74,7 +66,6 @@ public class EndPointTests
         mockGameGetThreadIDByGameID.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //4)Ошибка внутри стратегии
     [Fact]
     public void ErrorInCommandCreateFromMessageTest()
     {
@@ -105,7 +96,6 @@ public class EndPointTests
         mockCommandCreateFromMessage.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //5)Нет такой стратегии в айоке
     [Fact]
     public void ThreadSendCmdNotInIoCTest()
     {
@@ -136,7 +126,6 @@ public class EndPointTests
         mockCommandCreateFromMessage.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //6)Возвращает не тот тип 
     [Fact]
     public void NotICommandThreadSendCmdTest()
     {
@@ -178,7 +167,6 @@ public class EndPointTests
         mockThreadSendCmd.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //7)Ошибка внутри стратегии 
     [Fact]
     public void ErrorInThreadSendCmdTest()
     {
@@ -219,7 +207,6 @@ public class EndPointTests
         mockThreadSendCmd.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //8)Некорректные параметры
     [Fact]
     public void IncorrectParamTest()
     {
@@ -260,7 +247,6 @@ public class EndPointTests
         mockThreadSendCmd.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-    //9)ошибка внутри айкомманда
     [Fact]
     public void ErrorInThreadSendCmdCommandTest()
     {
@@ -307,8 +293,6 @@ public class EndPointTests
         mockThreadSendCmd.Verify(strategy => strategy.RunStrategy(It.IsAny<object[]>()), Times.Exactly(1));
     }
 
-
-    //OK
     [Fact]
     public void OKEndPointTest()
     {

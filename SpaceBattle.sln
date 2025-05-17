@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Test", "Spa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Endpoint", "Endpoint\Endpoint.csproj", "{D31355C0-B917-45D7-8443-BA1144658B9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Endpoint.Test", "Endpoint.Test\Endpoint.Test.csproj", "{BE7DAA63-5304-439C-B758-5A4BBA9D4130}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D31355C0-B917-45D7-8443-BA1144658B9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D31355C0-B917-45D7-8443-BA1144658B9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D31355C0-B917-45D7-8443-BA1144658B9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7DAA63-5304-439C-B758-5A4BBA9D4130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7DAA63-5304-439C-B758-5A4BBA9D4130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7DAA63-5304-439C-B758-5A4BBA9D4130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7DAA63-5304-439C-B758-5A4BBA9D4130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,8 +5,6 @@ using Endpoint;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Xml;
-
 
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
@@ -17,7 +15,7 @@ internal sealed class Startup
 		{
 			o.Title = "SpaceBattle API";
 			o.Version = "1.0";
-			o.Description = "Отправляет команды игровым объектам";
+			o.Description = "Sends commands to game objects";
 		});
 		services.AddSingleton(new SwaggerOptions());
 	}
